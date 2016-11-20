@@ -24,6 +24,4 @@ RUN \
     && rm -rf /tmp/memcache \
     && rm -rf /tmp/pear \
     && apk --no-cache del ${build_pkgs} \
-    && apk --no-cache add ${runtime_pkgs} \
-    && addgroup -g $EGID fpm-group \
-    && adduser -D -u $EUID -G fpm-group fpm-user
+    && apk --no-cache add ${runtime_pkgs}
