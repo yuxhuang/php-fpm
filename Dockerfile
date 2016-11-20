@@ -25,3 +25,5 @@ RUN \
     && rm -rf /tmp/pear \
     && apk --no-cache del ${build_pkgs} \
     && apk --no-cache add ${runtime_pkgs}
+
+CMD ["php-fpm", "-F"]
