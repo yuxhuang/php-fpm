@@ -26,4 +26,4 @@ RUN \
     && apk --no-cache del ${build_pkgs} \
     && apk --no-cache add ${runtime_pkgs} \
     && addgroup -g $EGID fpm-group \
-    && adduser -DH -u $EUID -G fpm-group fpm-user
+    && adduser -D -u $EUID -G fpm-group fpm-user
