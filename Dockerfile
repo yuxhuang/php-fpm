@@ -1,4 +1,4 @@
-FROM php:7-fpm-alpine
+FROM php:7-fpm-alpine3.9
 
 ARG PHPCONF=/usr/local/etc/php/conf.d
 
