@@ -8,22 +8,27 @@ ENV EGID 21000
 RUN \
     build_pkgs="build-base autoconf automake libmemcached-dev imagemagick-dev libtool zlib-dev libedit-dev cyrus-sasl-dev readline-dev libxml2-dev gd-dev curl-dev gmp-dev libpng-dev freetype-dev zlib-dev libxpm-dev libwebp-dev" \
     && runtime_pkgs="libmemcached libgcc imagemagick libltdl readline libxml2 gd curl gmp libpng libedit libjpeg freetype zlib libxpm libwebp libstdc++" \
-    && apk --no-cache add ${build_pkgs} ${runtime_pkgs} \
-    && docker-php-ext-install xmlrpc curl gd gmp json mysqli opcache pdo pdo_mysql readline xmlrpc \
-    && yes | pecl install -sal imagick \
-    && mkdir -p /tmp/memcache \
+    && apk --no-cache add ${build_pkgs} ${runtime_pkgs}
+
+RUN docker-php-ext-install xmlrpc curl gd gmp json mysqli pdo pdo_mysql
+
+RUN mkdir -p /tmp/memcache \
     && cd /tmp/memcache \
-    && curl -L https://github.com/php-memcached-dev/php-memcached/archive/php7.zip -O \
-    && unzip php7.zip \
-    && cd php-memcached-php7 \
+    && curl -L https://github.com/php-memcached-dev/php-memcached/archive/v3.1.5.zip -O \
+    && unzip v3.1.5.zip \
+    && cd php-memcached-3.1.5 \
     && phpize \
     && ./configure \
     && make && make install \
-    && docker-php-ext-enable imagick json memcached mysqli opcache pdo pdo_mysql \
     && cd / \
-    && rm -rf /tmp/memcache \
-    && rm -rf /tmp/pear \
-    && apk --no-cache del ${build_pkgs} \
-    && apk --no-cache add ${runtime_pkgs}
+    && rm -rf /tmp/memcache
+
+# RUN yes | pecl install -sal imagick \
+#     && rm -rf /tmp/pear \
+#     && docker-php-ext-enable imagick
+
+RUN docker-php-ext-enable json memcached mysqli pdo pdo_mysql opcache
+RUN apk --no-cache del ${build_pkgs}
+RUN apk --no-cache add ${runtime_pkgs}
 
 CMD ["php-fpm", "-F", "-O"]
